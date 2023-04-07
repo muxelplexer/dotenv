@@ -19,14 +19,15 @@ namespace dotenv
             std::cend(line),
             '='
         );
-        if (delim_pos == std::cend(line) || *(delim_pos + 1) != '\"') throw std::runtime_error("Invalid Entry!");
+        if (delim_pos == std::cend(line) || *(delim_pos + 1) != '\"') throw std::runtime_error("Missing start-quotation marks.");
 
         auto last_char = std::find(
             std::cbegin(line),
             std::cend(line),
             '\0'
         );
-        if (*(last_char - 1) != '\"') throw std::runtime_error("Invalid Entry!");
+        if (last_char == std::cend(line)) last_char = std::cend(line) - 1;
+        if (*(last_char - 1) != '\"') throw std::runtime_error("Missing end-quotation marks.");
 
         std::string name{std::cbegin(line), delim_pos};
         std::string value{delim_pos + 2, last_char - 1};
@@ -131,6 +132,13 @@ namespace dotenv
     {
         char* env_var = ::getenv(name.data());
         if (!env_var) return {};
+        else return {std::string_view{env_var}};
+    }
+
+    std::string_view get_env_or(const std::string& name, const std::string_view alt_val)
+    {
+        char* env_var = ::getenv(name.data());
+        if (!env_var) return alt_val;
         else return {std::string_view{env_var}};
     }
 
