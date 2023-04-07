@@ -13,5 +13,4 @@ namespace dotenv
     [[nodiscard]] std::vector<std::string_view> get_variables();
     [[nodiscard]] std::vector<std::string_view> get_all_variables();
     [[nodiscard]] std::optional<std::string_view> get_env(const std::string& name);
-    [[nodiscard]] std::optional<std::string_view> get_env(const std::string_view name);
 }

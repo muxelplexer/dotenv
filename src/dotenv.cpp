@@ -99,12 +99,4 @@ namespace dotenv
         else return {std::string_view{env_var}};
     }
 
-    [[nodiscard]] std::optional<std::string_view> get_env(const std::string_view name)
-    {
-        std::string str_name(name);
-        char* env_var = ::getenv(str_name.data());
-        if (!env_var) return {};
-        else return {std::string_view{env_var}};
-    }
-
 }
