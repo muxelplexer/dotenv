@@ -1,10 +1,8 @@
 #include "dotenv/dotenv.hpp"
 #include <algorithm>
 #include <array>
-#include <cstring>
-#include <cstdio>
 #include <fstream>
-#include <iostream>
+#include <regex>
 #include <stdexcept>
 #include <stdlib.h>
 #include <memory>
@@ -21,21 +19,36 @@ namespace dotenv
             std::cend(line),
             '='
         );
+        if (delim_pos == std::cend(line) || *(delim_pos + 1) != '\"') throw std::runtime_error("Invalid Entry!");
 
         auto last_char = std::find(
             std::cbegin(line),
             std::cend(line),
             '\0'
         );
-        std::string name{std::cbegin(line), delim_pos};
-        std::string value{delim_pos + 1, last_char};
+        if (*(last_char - 1) != '\"') throw std::runtime_error("Invalid Entry!");
 
-        if (value.starts_with('$'))
+        std::string name{std::cbegin(line), delim_pos};
+        std::string value{delim_pos + 2, last_char - 1};
+
+        for (auto it = std::find(std::begin(value), std::end(value), '$'); 
+                  it != std::cend(value);
+                  it = std::find(std::begin(value), std::end(value), '$'))
         {
-            value.erase(0, 1);
-            auto env_val = dotenv::get_env(value);
+            auto end_pos = std::find_if_not(
+                it + 1,
+                std::end(value),
+                ::isalnum
+            );
+
+            std::string val{it, end_pos};
+            auto env_val = dotenv::get_env(val.substr(1));
             if (env_val == std::nullopt) value = "";
-            else value = env_val.value();
+            else
+            {
+                for (auto pos = 0; (pos = value.find(val, pos) + 1); pos += env_val.value().size())
+                    value.replace(--pos, val.size(), env_val.value());
+            }
         }
 
         return {std::move(name), std::move(value)};
@@ -50,19 +63,26 @@ namespace dotenv
         if (ifs.bad()) throw std::runtime_error("Could not load .env file!");
 
         char_buf line{0};
+        int line_n = 1;
         while (ifs.getline(std::begin(line), line.size()))
         {
-            auto env_vals = parse_line(line);
-
-            if (env_vals.second == "") continue;
-            setenv(env_vals.first.c_str(), env_vals.second.c_str(), 1);
-            env_vars.emplace_back(std::move(env_vals.first));
+            try
+            {
+                auto env_vals = parse_line(line);
+                if (env_vals.second == "") continue;
+                setenv(env_vals.first.c_str(), env_vals.second.c_str(), 1);
+                env_vars.emplace_back(std::move(env_vals.first));
+            }
+            catch(const std::runtime_error& e)
+            {
+                throw;
+            }
         }
     }
 
     [[nodiscard]] std::vector<std::string_view> get_variables()
     {
-        std::vector<std::string_view> strings(env_vars.size());
+        std::vector<std::string_view> strings{};
         for (auto& var : env_vars)
         {
             strings.emplace_back(var.c_str());
