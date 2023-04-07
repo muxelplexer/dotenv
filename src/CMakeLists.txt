@@ -4,4 +4,4 @@ add_library(dotenv
 )
 add_library(dotenv::dotenv ALIAS dotenv)
 
-target_compile_features(dotenv PUBLIC cxx_std_23)
+target_compile_features(dotenv PUBLIC cxx_std_20)
