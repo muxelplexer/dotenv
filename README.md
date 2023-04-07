@@ -3,14 +3,11 @@
 The goal of this library is to provide a easy way to load a .env file from some directory.
 
 ## Requirements
----
 - C++20 supporting Compiler (gcc 12.2.0+)
 - CMake 3.24+
 - Doxygen (if building the documentation is desired)
 
 ## Example Usage
----
-
 ```cpp
 #include <iostream>
 #include "dotenv/dotenv.hpp"
