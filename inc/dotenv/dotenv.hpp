@@ -14,6 +14,7 @@ namespace dotenv
     /// each line, parsing the declarations from it. Environment variables will
     /// be expanded. It also stores the names of the variables inside a static
     /// vector for useage in `get_variables`.
+    /// @throws std::runtime_error if file could not be loaded.
     /// @param env_dir - filesystem path to the directory containing the .env file.
     /// @param overwrite Overwrite variable if it has already been defined.
     void load(std::filesystem::path env_dir, const bool overwrite = true);
