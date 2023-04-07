@@ -29,5 +29,10 @@ namespace dotenv
     /// @param name The name of the environment variable to return.
     /// @return std::string_view if successfull. std::nullopt otherwise.
     [[nodiscard]] std::optional<std::string_view> get_env(const std::string& name);
+
+    /// @brief Returns the specifier environment variable or an alternative value.
+    /// @param name The name of the environment variable to return.
+    /// @param alt_val The alternative value to return.
+    /// @return Value of $`name` or `alt_val`
     [[nodiscard]] std::string_view get_env_or(const std::string& name, const std::string_view alt_val);
 }
