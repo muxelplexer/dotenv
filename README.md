@@ -6,6 +6,7 @@ The goal of this library is to provide a easy way to load a .env file from some 
 ---
 - C++20 supporting Compiler (gcc 12.2.0+)
 - CMake 3.24+
+- Doxygen (if building the documentation is desired)
 
 ## Example Usage
 ---
