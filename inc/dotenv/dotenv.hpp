@@ -1,5 +1,4 @@
 #pragma once
-#include <ranges>
 #include <filesystem>
 #include <optional>
 #include <string_view>
@@ -13,7 +12,7 @@ namespace dotenv
     /// Opens the file at `env_dir`/.env inside an ifstream and steps through
     /// each line, parsing the declarations from it. Environment variables will
     /// be expanded. It also stores the names of the variables inside a static
-    /// vector for useage in `get_variables`.
+    /// vector for usage in `get_variables`.
     /// @throws std::runtime_error if file could not be loaded.
     /// @param env_dir - filesystem path to the directory containing the .env file.
     /// @param overwrite Overwrite variable if it has already been defined.
@@ -27,7 +26,7 @@ namespace dotenv
 
     /// @brief Returns the specified environment variable.
     /// @param name The name of the environment variable to return.
-    /// @return std::string_view if successfull. std::nullopt otherwise.
+    /// @return std::string_view if successful. std::nullopt otherwise.
     [[nodiscard]] std::optional<std::string_view> get_env(const std::string& name);
 
     /// @brief Returns the specifier environment variable or an alternative value.

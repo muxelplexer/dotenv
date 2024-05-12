@@ -5,7 +5,6 @@
 #include <regex>
 #include <stdexcept>
 #include <stdlib.h>
-#include <memory>
 
 namespace dotenv
 {
