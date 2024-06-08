@@ -95,7 +95,7 @@ namespace dotenv
         }
     }
 
-    [[nodiscard]] std::vector<std::string_view> get_variables()
+    [[nodiscard]] std::vector<std::string_view> get_variables() noexcept
     {
         std::vector<std::string_view> strings{};
         for (auto& var : env_vars)
@@ -107,7 +107,7 @@ namespace dotenv
 
     extern "C" char** environ;
 
-    [[nodiscard]] std::vector<std::string_view> get_all_variables()
+    [[nodiscard]] std::vector<std::string_view> get_all_variables() noexcept
     {
         std::vector<std::string_view> strings{};
         auto env_ptr = environ;
@@ -127,14 +127,14 @@ namespace dotenv
         return strings;
     }
 
-    [[nodiscard]] std::optional<std::string_view> get_env(const std::string& name)
+    [[nodiscard]] std::optional<std::string_view> get_env(const std::string& name) noexcept
     {
         char* env_var = ::getenv(name.data());
         if (!env_var) return {};
         else return {std::string_view{env_var}};
     }
 
-    std::string_view get_env_or(const std::string& name, const std::string_view alt_val)
+    std::string_view get_env_or(const std::string& name, const std::string_view alt_val) noexcept
     {
         char* env_var = ::getenv(name.data());
         if (!env_var) return alt_val;
