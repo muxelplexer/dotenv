@@ -1,15 +1,24 @@
 #include "dotenv/dotenv.hpp"
 #include <algorithm>
 #include <array>
+#include <cctype>
+#include <cstdlib>
+#include <filesystem>
 #include <fstream>
+#include <optional>
 #include <regex>
 #include <stdexcept>
-#include <stdlib.h>
+#include <string>
+#include <string_view>
+#include <utility>
+#include <vector>
 
 namespace dotenv
 {
     using char_buf = std::array<char, 255>;
-    static std::vector<std::string> env_vars{};
+    namespace {
+        std::vector<std::string> env_vars{};
+    }
 
     std::pair<std::string, std::string> parse_line(const char_buf& line)
     {
@@ -46,12 +55,16 @@ namespace dotenv
             if (env_val == std::nullopt) 
             {
                 for (auto pos = 0; (pos = value.find(val, pos) + 1); )
+                {
                     value.replace(--pos, val.size(), "");
+                }
             }
             else
             {
                 for (auto pos = 0; (pos = value.find(val, pos) + 1); pos += env_val.value().size())
+                {
                     value.replace(--pos, val.size(), env_val.value());
+                }
             }
         }
 
@@ -98,10 +111,13 @@ namespace dotenv
     [[nodiscard]] std::vector<std::string_view> get_variables() noexcept
     {
         std::vector<std::string_view> strings{};
+        strings.reserve(env_vars.size());
+
         for (auto& var : env_vars)
         {
             strings.emplace_back(var.c_str());
         }
+
         return strings;
     }
 
@@ -130,15 +146,22 @@ namespace dotenv
     [[nodiscard]] std::optional<std::string_view> get_env(const std::string& name) noexcept
     {
         char* env_var = ::getenv(name.data());
-        if (!env_var) return {};
-        else return {std::string_view{env_var}};
+        if (!env_var) {
+            return {};
+        }
+        else {
+            return {std::string_view{env_var}};
+        }
     }
 
     std::string_view get_env_or(const std::string& name, const std::string_view alt_val) noexcept
     {
         char* env_var = ::getenv(name.data());
-        if (!env_var) return alt_val;
-        else return {std::string_view{env_var}};
+        if (!env_var) {
+            return alt_val;
+        }
+        else {
+            return {std::string_view{env_var}};
+        }
     }
-
-}
+}  // namespace dotenv

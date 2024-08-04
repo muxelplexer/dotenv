@@ -1,6 +1,7 @@
 #pragma once
 #include <filesystem>
 #include <optional>
+#include <string>
 #include <string_view>
 #include <vector>
 
@@ -34,4 +35,5 @@ namespace dotenv
     /// @param alt_val The alternative value to return.
     /// @return Value of $`name` or `alt_val`
     [[nodiscard]] std::string_view get_env_or(const std::string& name, const std::string_view alt_val) noexcept;
-}
+
+}  // namespace dotenv
