@@ -13,7 +13,7 @@ namespace dotenv
     /// Opens the file at `env_dir`/.env inside an ifstream and steps through
     /// each line, parsing the declarations from it. Environment variables will
     /// be expanded. It also stores the names of the variables inside a static
-    /// vector for usage in `get_variables`.
+    /// vector for usage in `get_variables` and `get_cenv`.
     /// @throws std::runtime_error if file could not be loaded.
     /// @param env_dir - filesystem path to the directory containing the .env file.
     /// @param overwrite Overwrite variable if it has already been defined.
@@ -29,6 +29,11 @@ namespace dotenv
     /// @param name The name of the environment variable to return.
     /// @return std::string_view if successful. std::nullopt otherwise.
     [[nodiscard]] std::optional<std::string_view> get_env(const std::string& name) noexcept;
+
+    /// @brief Returns the specified environment variable from the cache.
+    /// @param name The name of the environment variable to return.
+    /// @return std::string_view if successful. std::nullopt otherwise.
+    [[nodiscard]] std::optional<std::string_view> get_cenv(const std::string& name) noexcept;
 
     /// @brief Returns the specifier environment variable or an alternative value.
     /// @param name The name of the environment variable to return.

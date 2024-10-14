@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
+#include <iterator>
 #include <optional>
 #include <regex>
 #include <stdexcept>
@@ -152,6 +153,19 @@ namespace dotenv
         else {
             return {std::string_view{env_var}};
         }
+    }
+
+    [[nodiscard]] std::optional<std::string_view> get_cenv(const std::string& name) noexcept
+    {
+        if(const auto env_var = std::find(
+            std::cbegin(env_vars),
+            std::cend(env_vars),
+            name
+        ); env_var != std::cend(env_vars))
+        {
+            return std::make_optional(*env_var);
+        }
+        return std::nullopt;
     }
 
     std::string_view get_env_or(const std::string& name, const std::string_view alt_val) noexcept
