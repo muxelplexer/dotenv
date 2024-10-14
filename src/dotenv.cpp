@@ -22,7 +22,7 @@ namespace dotenv
 
     std::pair<std::string, std::string> parse_line(const char_buf& line)
     {
-        auto delim_pos = std::find(
+        const auto delim_pos = std::find(
             std::cbegin(line),
             std::cend(line),
             '='
@@ -37,21 +37,21 @@ namespace dotenv
         if (last_char == std::cend(line)) last_char = std::cend(line) - 1;
         if (*(last_char - 1) != '\"') throw std::runtime_error("Missing end-quotation marks.");
 
-        std::string name{std::cbegin(line), delim_pos};
+        const std::string name{std::cbegin(line), delim_pos};
         std::string value{delim_pos + 2, last_char - 1};
 
         for (auto it = std::find(std::begin(value), std::end(value), '$'); 
                   it != std::cend(value);
                   it = std::find(it + 1, std::end(value), '$'))
         {
-            auto end_pos = std::find_if_not(
+            const auto end_pos = std::find_if_not(
                 it + 1,
                 std::end(value),
                 ::isalnum
             );
 
-            std::string val{it, end_pos};
-            auto env_val = dotenv::get_env(val.substr(1));
+            const std::string val{it, end_pos};
+            const auto env_val = dotenv::get_env(val.substr(1));
             if (env_val == std::nullopt) 
             {
                 for (auto pos = 0; (pos = value.find(val, pos) + 1); )
@@ -85,7 +85,7 @@ namespace dotenv
         {
             try
             {
-                auto env_vals = parse_line(line);
+                const auto env_vals = parse_line(line);
                 if (env_vals.second == "") continue;
                 setenv(env_vals.first.c_str(), env_vals.second.c_str(), 1);
                 auto it = std::find(
@@ -145,7 +145,7 @@ namespace dotenv
 
     [[nodiscard]] std::optional<std::string_view> get_env(const std::string& name) noexcept
     {
-        char* env_var = ::getenv(name.data());
+        const char* env_var = ::getenv(name.data());
         if (!env_var) {
             return {};
         }
@@ -156,7 +156,7 @@ namespace dotenv
 
     std::string_view get_env_or(const std::string& name, const std::string_view alt_val) noexcept
     {
-        char* env_var = ::getenv(name.data());
+        const char* env_var = ::getenv(name.data());
         if (!env_var) {
             return alt_val;
         }
