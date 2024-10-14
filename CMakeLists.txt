@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 project(dotenv
-        VERSION 1.2.0
+        VERSION 1.3.0
 )
 option(BUILD_DOC "Build documentation" ON)
 if (BUILD_DOC)
